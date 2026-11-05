@@ -315,6 +315,9 @@ def run_pytest(folder: Path, solutions: bool) -> tuple[int, str, float]:
 
 def check_tests(r: Report, folder: Path) -> None:
     code, out, secs = run_pytest(folder, solutions=True)
+    if re.search(r"\d+ skipped", out) and not re.search(r"\d+ (passed|failed|error)", out):
+        r.warn("every test was skipped (missing optional dependency?), so nothing was checked")
+        return
     if code != 0:
         tail = "\n      ".join(out.strip().splitlines()[-6:])
         r.err(f"tests fail against the solution:\n      {tail}")
