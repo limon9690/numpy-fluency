@@ -62,7 +62,8 @@ So a `np.float64` coming out of `x.mean()` can silently turn your float32 data i
   `UFuncTypeError` (a `TypeError`), because the float result can't be stored in an int array.
   `a = a + 0.5` works: it makes a new float array.
 - `astype` always makes a copy (unless you pass `copy=False` and nothing changes).
-- uint8 subtraction wraps too: `np.uint8(5) - np.uint8(10)` is `251`.
+- uint8 subtraction wraps too: `np.uint8(5) - np.uint8(10)` is `251`. On NumPy scalars you also
+  get a `RuntimeWarning`; on arrays it wraps silently.
 - PyTorch also wraps on uint8 overflow, but its promotion rules differ in details. Don't assume
   the same result dtype on both sides of the bridge (see 039).
 - `.astype(np.uint8)` on floats outside 0-255 gives garbage (undefined behaviour), not clipping.

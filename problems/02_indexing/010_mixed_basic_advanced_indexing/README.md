@@ -71,7 +71,10 @@ to `(B, K)`, followed by the untouched `D` axis: result `(B, K, D)`.
 - An integer index next to an index array, separated by a slice, moves axes to the front (Rule 2).
 - `a[rows][:, cols]` also gives a block, but makes a temporary copy first; `np.ix_` does it in
   one step and also works for **assignment**: `a[np.ix_(r, c)] = 0`.
-- PyTorch follows the same rules (inherited from NumPy), so the same surprises apply there.
+- PyTorch only partly matches. Two index arrays separated by a slice behave the same
+  (`x[[0, 1], :, :, [0, 1]]` is `(2, 6, 7)` in both). But PyTorch treats a plain integer as basic
+  indexing, so `x[0, :, :, [0, 1]]` is `(6, 7, 2)` in PyTorch and `(2, 6, 7)` in NumPy.
+  Watch for this when porting code between the two.
 - Mixed indexing always returns a copy, because it contains advanced indexing.
 
 ## Builds on
